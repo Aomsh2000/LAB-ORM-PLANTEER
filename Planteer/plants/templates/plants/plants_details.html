@@ -1,0 +1,84 @@
+{% extends 'main/base.html'%}
+{%load static%}
+
+    {%block title%}<title>Plant | {{plant.name}}</title>{%endblock%}
+   
+    {%block head%}
+    <link href="{%static 'css/plants.css'%}" rel="stylesheet"/>
+
+    {%endblock%}
+
+     {%block content%}
+        <section class="row mb-5">
+            <div class="plant-sideimg col-md-6 col-sm-12 ">
+                <img class="w-100" src="{{plant.image.url}}" alt="plant image">
+            </div>
+            <div class="plantInfo col-md-6 col-sm-12 mt-sm-2">
+                <h2>{{plant.name}}</h2>
+                <h4 class="text-muted font-weight-normal">{{plant.get_category_display}}</h4>
+                <div class="details-info">
+                    <p class="text-muted">{{plant.about}}</p>
+                    <p class="">Native to:</p>
+                    <p class="">Saudi Arabia</p>
+                    <p class="">Is Edible: {%if plant.is_edible%} Yes {%else%} No {%endif%}</p>
+                    <p class="">Used for: </p>
+                    <p class="">{{plant.used_for}}</p>
+                </div> 
+                
+                <div class="editButtons d-flex justify-content-end flex-column flex-sm-row pt-5" style="gap: 1rem;">
+                    <a href="{% url 'plants:update_plant_view' plant.id%}" class="btn  mb-2 mb-sm-0 btn-success">Update</a>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Delete</button>
+
+                </div>
+            </div>
+          </section>
+
+        <!-- Button trigger modal -->  
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete Plant</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                Are you sure you want to delete "{{plant.name}}" plant?
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"style="    background-color: ##6c757d;" data-dismiss="modal">Close</button>
+                <a href="{% url 'plants:delete_plant_view' plant.id%}" class="btn  btn-danger" style="background-color: #dc3545;">Delete</a>
+            </div>
+            </div>
+            </div>
+        </div>
+
+        {% if related_plants|length > 1 %}
+          <h6 class="">Related plants</h6>
+          <section class="display-plants  row mt-md-5 my-sm-5 ">
+            {%for plantt in related_plants%}
+            {%if plantt.name != plant.name%}
+            <div class="col-md-4">
+                <a href="{%url 'plants:plants_details_view' plantt.id %}">
+                    <div class="card mb-4 ">
+                    <div class="card-top">
+                        <img class="card-img-top " src="{{plantt.image.url}}" alt="Card image cap">
+                    </div>
+                    <div class="card-body pl-0 justify-content-start">
+                        <h6>{{plantt.name}}</h6>  
+                        <p class="card-text text-muted">{{plantt.about|truncatechars:50}}</p>
+                        <h6>{{plantt.get_category_display}}</h6>  
+                    </div>
+                    </div>
+                </a>
+              </div>
+              {%endif%}
+              {%endfor%}
+             
+          </section>
+          {%endif%}
+          
+          {%endblock%}
+      

@@ -1,0 +1,53 @@
+{% extends 'main/base.html'%}
+{%load static%}
+
+    {%block title%}<title>Search</title>{%endblock%}
+   
+    {%block head%}
+    <link href="{%static 'css/plants.css'%}" rel="stylesheet"/>
+
+    {%endblock%}
+
+     {%block content%}
+        <section class="heading text-start ">
+            <h4 class="">Search Results ({{plants.count}})</h4>
+            <h6 class="text-results">results for: "{{request.GET.search}}"</h6>
+
+            <div class="d-flex justify-content-between">
+                <form class="w-100" method="get" action="{% url 'plants:search_view' %}">
+                    <div class="filtring-and-search d-flex justify-content-center ">
+                        <input type="search" class="form-control" placeholder="Search" value="{{request.GET.search}}" name="search" required minlength="1"/>
+                        <select name="order_by" class="form-select">
+                            <option value="" disabled selected>Filter By</option>
+                            <option value="created_at" {%if request.GET.order_by == 'created_at'%} selected {%endif%}>Date</option>
+                            <option value="edible"  {%if request.GET.order_by == 'edible'%} selected {%endif%}>Edible</option>
+                            <option value="not_edible"  {%if request.GET.order_by == 'not_edible'%} selected {%endif%}>Not Edible</option>
+                        </select>
+                        <input type="submit" class="btn text-white " value="apply"/>
+                    </div>
+                </form>
+            </div>
+          </section>
+
+          <section class="display-plants  row mt-md-5 my-sm-5 ">
+            {%for plant in plants%}
+            <div class="col-md-4">
+                <a href="{%url 'plants:plants_details_view' plant.id %}">
+                    <div class="card mb-4 ">
+                    <div class="card-top">
+                        <img class="card-img-top " src="{{plant.image.url}}" alt="Card image cap">
+                    </div>
+                    <div class="card-body pl-0 justify-content-start">
+                        <h6>{{plant.name}}</h6>  
+                        <p class="card-text text-muted">{{plant.about|truncatechars:50}}</p>
+                        <h6>{{plant.get_category_display}}</h6> 
+                        <p class="text-muted fs-6">{{plant.created_at}}</p>
+                    </div>
+                    </div>
+                </a>
+              </div>
+              {%endfor%}
+             
+          </section>
+          {%endblock%}
+      

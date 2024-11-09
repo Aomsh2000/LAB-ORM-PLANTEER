@@ -1,0 +1,55 @@
+{% extends 'main/base.html'%}
+{%load static%}
+
+    {%block title%}<title>Messages</title>{%endblock%}
+   
+    {%block head%}
+    <link href="{%static 'css/plants.css'%}" rel="stylesheet"/>
+
+    {%endblock%}
+
+     {%block content%}
+        <section class="heading text-start ">
+            <h2 class="pb-2">Messages From Users</h2>
+         
+            <section class="heading text-start ">
+                {% if request.GET.search %}
+                <h4>Search Results ({{masseges.count}})</h4>
+                <h6 class="text-results">results for: "{{request.GET.search}}"</h6>
+                {%endif%}
+                <div class="d-flex justify-content-between">
+                    <form class="w-100" method="get" action="{% url 'main:messages_view' %}">
+                        <div class="filtring-and-search d-flex justify-content-center ">
+                            <input type="search" class="form-control" placeholder="Search" value="{{request.GET.search}}" name="search" required minlength="1"/>
+                            <select name="order_by" class="form-select">
+                                <option value="" disabled selected>Order By</option>
+                                <option value="created_at" {%if request.GET.order_by == 'created_at'%} selected {%endif%}>Date</option>
+                            </select>
+                            <input type="submit" class="btn text-white " value="apply"/>
+                        </div>
+                    </form>
+                </div>
+              </section>
+
+          </section>
+
+          <section class="display-messages  row mt-md-5 my-sm-5 ">
+            {% for messageobject in masseges%}
+            <div class="col-md-6">
+               
+                    <div class="card mb-4 " >
+                    <div class="card-body pl-0 justify-content-start">
+                        <h6>   <i class="fa-solid fa-circle-user" style="font-size: 2rem;"></i> {{messageobject.first_name|capfirst}} {{messageobject.last_name|capfirst}}</h6>
+                        <a href="mailto:{{messageobject.email}}" style="padding-bottom: 0.3rem;">User Email: {{messageobject.email}} </a>  
+                        <p class="card-text text-muted" style="padding-top: 0.3rem;">{{messageobject.message}}</p>
+                        <p class="card-text text-muted">{{messageobject.created_at}}</p>
+
+                    </div>
+                    </div>
+                
+              </div>
+              {%endfor%}
+
+          </section>
+          {%endblock%}
+      

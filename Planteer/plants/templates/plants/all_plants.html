@@ -1,0 +1,36 @@
+{% extends 'main/base.html'%}
+{%load static%}
+
+    {%block title%}<title>All Plants</title>{%endblock%}
+   
+    {%block head%}
+    <link href="{%static 'css/plants.css'%}" rel="stylesheet"/>
+
+    {%endblock%}
+
+     {%block content%}
+        <section class="heading text-start ">
+            <h4>All Plants</h4>
+          </section>
+
+          <section class="display-plants  row mt-md-5 my-sm-5 ">
+            {%for plant in plants%}
+            <div class="col-md-4">
+                <a href="{%url 'plants:plants_details_view' plant.id %}">
+                    <div class="card mb-4 ">
+                    <div class="card-top">
+                        <img class="card-img-top " src="{{plant.image.url}}" alt="Card image cap">
+                    </div>
+                    <div class="card-body pl-0 justify-content-start">
+                        <h6>{{plant.name}}</h6>  
+                        <p class="card-text text-muted">{{plant.about|truncatechars:50}}</p>
+                        <h6>{{plant.get_category_display}}</h6>  
+                    </div>
+                    </div>
+                </a>
+              </div>
+              {%endfor%}
+             
+          </section>
+          {%endblock%}
+      

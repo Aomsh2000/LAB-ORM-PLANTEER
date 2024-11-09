@@ -1,0 +1,32 @@
+.plant-sideimg{
+    height: 75vh;
+
+}
+
+.plant-sideimg img{
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.plantInfo{
+    padding-left: 2rem;
+}
+
+.details-info{
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    line-height: 1.2;
+}
+.btn-success{
+    background-color: #28a745;
+}
+
+.btn-danger{
+    background-color: #dc3545;
+}
+
+.filtring-and-search{
+    gap: 2rem;
+}
