@@ -3,11 +3,17 @@ from django.http import HttpResponse,HttpRequest
 from django.contrib import messages
 from .models import Plant
 from .forms import PlantForm
+from django.core.paginator import Paginator
 # Create your views here.
 
 def all_plants_view(request:HttpRequest):
     plants = Plant.objects.all()
-    return render(request, "plants/all_plants.html",{"plants":plants})
+
+    p=Paginator(Plant.objects.all(),6)
+    page=request.GET.get('page')
+    plants_list=p.get_page(page)
+
+    return render(request, "plants/all_plants.html",{"plants":plants,'plants_list':plants_list})
 
 
 def plants_details_view(request:HttpRequest,plant_id:int):
@@ -27,20 +33,24 @@ def plants_details_view(request:HttpRequest,plant_id:int):
 
 
 def search_view(request:HttpRequest):
-
+    
+    plants=Plant.objects.all()
     if "search" in request.GET and len(request.GET["search"])>=1:
         plants=Plant.objects.filter(name__contains=request.GET["search"])
 
-        if "order_by" in request.GET and request.GET["order_by"] == "created_at":
-            plants=plants.order_by("-created_at")
+    if "order_by" in request.GET:
+        if request.GET["order_by"] == "created_at":
+            plants = plants.order_by("-created_at")
+        elif request.GET["order_by"] == "edible":
+            plants = plants.filter(is_edible=True)
+        elif request.GET["order_by"] == "not_edible":
+            plants = plants.filter(is_edible=False)       
 
-        if "order_by" in request.GET and request.GET["order_by"] == "edible":
-            plants=Plant.objects.filter(is_edible=True) 
+    p=Paginator(plants,6)
+    page=request.GET.get('page')
+    plants_list=p.get_page(page)
 
-        if "order_by" in request.GET and request.GET["order_by"] == "not_edible":
-            plants=Plant.objects.filter(is_edible=False)        
-
-    return render(request, "plants/search_plants.html",{"plants":plants})
+    return render(request, "plants/search_plants.html",{"plants":plants,"plants_list":plants_list})
 
 
 def add_plant_view(request:HttpRequest):

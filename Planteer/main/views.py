@@ -5,6 +5,7 @@ from plants.models import Plant
 from django.contrib import messages
 from .forms import ContactForm
 from django.db.models import Q
+from django.core.paginator import Paginator
 # Create your views here.
 
 def home_view(request:HttpRequest):
@@ -30,15 +31,20 @@ def contact_view(request:HttpRequest):
 
 
 def messages_view(request:HttpRequest):
-    masseges=Contact.objects.all
+    masseges=Contact.objects.all()
+    
     if "search" in request.GET and len(request.GET["search"])>=1:
         masseges = Contact.objects.filter(
         Q(first_name__icontains=request.GET["search"]) | Q(last_name__icontains=request.GET["search"]))
 
         if "order_by" in request.GET and request.GET["order_by"] == "created_at":
             masseges=masseges.order_by("-created_at")
+    
+    p=Paginator(masseges,4)
+    page=request.GET.get('page')
+    massegeobj=p.get_page(page)
 
-    return render(request,"main/messages.html",{"masseges":masseges})
+    return render(request,"main/messages.html",{"masseges":massegeobj})
 
 
 

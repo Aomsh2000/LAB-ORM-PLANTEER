@@ -14,7 +14,7 @@
          
             <section class="heading text-start ">
                 {% if request.GET.search %}
-                <h4>Search Results ({{masseges.count}})</h4>
+                <h4>Search Results ({{masseges.paginator.count}})</h4>
                 <h6 class="text-results">results for: "{{request.GET.search}}"</h6>
                 {%endif%}
                 <div class="d-flex justify-content-between">
@@ -51,5 +51,62 @@
               {%endfor%}
 
           </section>
+          <br/><br/>
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+            
+                {% if masseges.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1" aria-label="First">
+                            <span aria-hidden="true"> First</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ masseges.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-hidden="true"> First</span>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-hidden="true">&laquo;</span>
+                    </li>
+                {% endif %}
+    
+                {% for num in masseges.paginator.page_range %}
+                    {% if num == masseges.number %}
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+        
+                {% if masseges.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ masseges.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ masseges.paginator.num_pages }}" aria-label="Last">
+                            <span aria-hidden="true">Last </span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-hidden="true">&raquo;</span>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-hidden="true">Last</span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
           {%endblock%}
       
